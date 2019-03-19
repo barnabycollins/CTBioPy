@@ -6,6 +6,28 @@ import sys
 # YOUR FUNCTIONS GO HERE -------------------------------------
 # 1. Populate the scoring matrix and the backtracking matrix
 
+def populateScoreMat():
+    x = len(scores[0])
+    y = len(scores)
+    
+    for i in range(y):
+        for j in range(x):
+            if (i == 0 or j == 0):
+                value = (i+j)*-2
+            else :
+                value = i+j
+
+            # TODO: ACTUALLY COMPUTE SCORES FOR EACH GRID POSITION
+            scores[i][j] = value
+    
+    show(scores)
+
+def show(matrix):
+    for i in matrix:
+        for j in i:
+            print(f'{j:3d}', end=' ')
+        print()
+
 # ------------------------------------------------------------
 
 
@@ -50,6 +72,9 @@ start = time.time()
 # To work with the printing functions below the best alignment should be called best_alignment and its score should be called best_score. 
 
 
+scores = [[0 for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
+populateScoreMat()
+
 
 #-------------------------------------------------------------
 
@@ -58,7 +83,8 @@ start = time.time()
 # This calculates the time taken and will print out useful information 
 stop = time.time()
 time_taken=stop-start
-
+best_score = 0
+best_alignment = ['','']
 # Print out the best
 print('Time taken: '+str(time_taken))
 print('Best (score '+str(best_score)+'):')
