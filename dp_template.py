@@ -6,27 +6,83 @@ import sys
 # YOUR FUNCTIONS GO HERE -------------------------------------
 # 1. Populate the scoring matrix and the backtracking matrix
 
-def populateScoreMat():
+def score(i, j):
+    b1 = seq1[i-1]
+    b2 = seq2[j-1]
+    last = scores[i-1][j-1]
+    if (b1 == b2):
+        if (b1 == "A"):
+            biggest = 4 + last
+        elif (b1 == "C"):
+            biggest = 3 + last
+        elif (b1 == "G"):
+            biggest = 2 + last
+        elif (b1 == "T"):
+            biggest = 1 + last
+
+    else:
+        biggest = -3 + last
+    
+    back = [-1, -1]
+    
+    p = scores[i-1][j] - 2
+    if (p > biggest):
+        biggest = p
+        back = [-1, 0]
+    
+    p = scores[i][j-1] - 2
+    if (p > biggest):
+        biggest = p
+        back = [0, -1]
+
+    return biggest, back
+
+
+def populateMatrices():
     x = len(scores[0])
     y = len(scores)
     
-    for i in range(y):
-        for j in range(x):
-            if (i == 0 or j == 0):
-                value = (i+j)*-2
-            else :
-                value = i+j
-
-            # TODO: ACTUALLY COMPUTE SCORES FOR EACH GRID POSITION
-            scores[i][j] = value
+    for i in range(1, x):
+        scores[0][i] = -2*i
+        backtrack[0][i] = [0,-1]
     
-    show(scores)
+    for i in range(1, y):
+        scores[i][0] = -2*i
+        backtrack[i][0] = [-1, 0]
+        for j in range(1, x):
+            scores[i][j], backtrack[i][j] = score(i, j)
 
-def show(matrix):
-    for i in matrix:
+def show():
+    for i in scores:
         for j in i:
             print(f'{j:3d}', end=' ')
         print()
+        
+    print()
+    for i in backtrack:
+        print(i)
+
+def getAlignments():
+    cur = [len(scores)-1, len(scores[0])-1]
+    best_alignment = ['','']
+    val = backtrack[cur[0]][cur[1]]
+    while val != [0, 0]:
+        if (val == [-1, -1]):
+            al = [seq2[cur[1]-1], seq1[cur[0]-1]]
+        
+        elif (val == [-1, 0]):
+            al = [" ", seq1[cur[0]-1]]
+            
+        else:
+            al = [seq2[cur[1]-1], " "]
+        
+        for i in range(2):
+            best_alignment[i] = al[i] + best_alignment[i]
+            cur[i] += val[i]
+        
+        val = backtrack[cur[0]][cur[1]]
+    
+    return best_alignment
 
 # ------------------------------------------------------------
 
@@ -73,8 +129,11 @@ start = time.time()
 
 
 scores = [[0 for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
-populateScoreMat()
-
+backtrack = [[[0,0] for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
+populateMatrices()
+#show()
+best_score = scores[-1][-1]
+best_alignment = getAlignments()
 
 #-------------------------------------------------------------
 
@@ -83,8 +142,6 @@ populateScoreMat()
 # This calculates the time taken and will print out useful information 
 stop = time.time()
 time_taken=stop-start
-best_score = 0
-best_alignment = ['','']
 # Print out the best
 print('Time taken: '+str(time_taken))
 print('Best (score '+str(best_score)+'):')
