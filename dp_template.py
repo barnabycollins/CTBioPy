@@ -131,7 +131,7 @@ start = time.time()
 scores = [[0 for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
 backtrack = [[[0,0] for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
 populateMatrices()
-#show()
+#show() TODO: Test different methods of storing backtrack data (eg chars)
 best_score = scores[-1][-1]
 best_alignment = getAlignments()
 
@@ -148,4 +148,3 @@ print('Best (score '+str(best_score)+'):')
 displayAlignment(best_alignment)
 
 #-------------------------------------------------------------
-
