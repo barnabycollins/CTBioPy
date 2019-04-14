@@ -23,17 +23,17 @@ def score(i, j):
     else:
         biggest = -3 + last
     
-    back = [-1, -1]
+    back = 2
     
     p = scores[i-1][j] - 2
     if (p > biggest):
         biggest = p
-        back = [-1, 0]
+        back = 1
     
     p = scores[i][j-1] - 2
     if (p > biggest):
         biggest = p
-        back = [0, -1]
+        back = 3
 
     return biggest, back
 
@@ -44,11 +44,11 @@ def populateMatrices():
     
     for i in range(1, x):
         scores[0][i] = -2*i
-        backtrack[0][i] = [0,-1]
+        backtrack[0][i] = 3
     
     for i in range(1, y):
         scores[i][0] = -2*i
-        backtrack[i][0] = [-1, 0]
+        backtrack[i][0] = 1
         for j in range(1, x):
             scores[i][j], backtrack[i][j] = score(i, j)
 
@@ -57,8 +57,7 @@ def show():
         for j in i:
             print(f'{j:3d}', end=' ')
         print()
-        
-    print()
+    
     for i in backtrack:
         print(i)
 
@@ -66,19 +65,21 @@ def getAlignments():
     cur = [len(scores)-1, len(scores[0])-1]
     best_alignment = ['','']
     val = backtrack[cur[0]][cur[1]]
-    while val != [0, 0]:
-        if (val == [-1, -1]):
+    while val != 0:
+        if (val == 2):
             al = [seq2[cur[1]-1], seq1[cur[0]-1]]
         
-        elif (val == [-1, 0]):
+        elif (val == 1):
             al = [" ", seq1[cur[0]-1]]
             
         else:
             al = [seq2[cur[1]-1], " "]
         
+        chng = backdict[val]
+
         for i in range(2):
             best_alignment[i] = al[i] + best_alignment[i]
-            cur[i] += val[i]
+            cur[i] += chng[i]
         
         val = backtrack[cur[0]][cur[1]]
     
@@ -129,7 +130,8 @@ start = time.time()
 
 
 scores = [[0 for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
-backtrack = [[[0,0] for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
+backtrack = [[0 for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
+backdict = {0: [0, 0], 1: [-1, 0], 2: [-1, -1], 3: [0, -1]}
 populateMatrices()
 #show() TODO: Test different methods of storing backtrack data (eg chars)
 best_score = scores[-1][-1]
