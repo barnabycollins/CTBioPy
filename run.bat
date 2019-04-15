@@ -1,1 +1,1 @@
-python363 dp_template.py length15_A.txt length15_B.txt
+python363 dp_template.py length10000_A.txt length10000_B.txt
