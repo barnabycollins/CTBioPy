@@ -133,7 +133,7 @@ scores = [[0 for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
 backtrack = [[0 for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
 backdict = {0: [0, 0], 1: [-1, 0], 2: [-1, -1], 3: [0, -1]}
 populateMatrices()
-#show() TODO: Test different methods of storing backtrack data (eg chars)
+#show()
 best_score = scores[-1][-1]
 best_alignment = getAlignments()
 
