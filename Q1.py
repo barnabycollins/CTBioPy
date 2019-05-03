@@ -52,15 +52,6 @@ def populateMatrices():
         for j in range(1, x):
             scores[i][j], backtrack[i][j] = score(i, j)
 
-def show():
-    for i in scores:
-        for j in i:
-            print(f'{j:3d}', end=' ')
-        print()
-    
-    for i in backtrack:
-        print(i)
-
 def getAlignments():
     cur = [len(scores)-1, len(scores[0])-1]
     best_alignment = ['','']
@@ -133,7 +124,6 @@ scores = [[0 for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
 backtrack = [[0 for i in range(len(seq2)+1)] for i in range(len(seq1)+1)]
 backdict = {0: [0, 0], 1: [-1, 0], 2: [-1, -1], 3: [0, -1]}
 populateMatrices()
-#show()
 best_score = scores[-1][-1]
 best_alignment = getAlignments()
 
